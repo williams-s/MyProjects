@@ -1,0 +1,132 @@
+body{
+    background-color: #E6E6FA;
+    margin-left: auto;
+    margin-right: auto;
+    width: 800px;
+}
+#Titre1{
+    color:gold ;
+    font-family: 'Comic sans ms' ;
+    font-size: 35px;
+}
+
+header img {
+    width: 100%;
+    height: 40%;
+}
+
+
+#info{
+    color:#614e1a;
+    font-family: 'Comic sans ms' ;
+}
+
+#sorciers{
+    height: auto ;
+    width: 200px;
+    float: right;
+}
+
+#ChambreSecrets{
+    height: auto;
+    width: 200px;
+    float: right;
+}
+
+#Prisonnier{
+    height: auto;
+    width: 200px;
+    float: right;
+}
+
+#CoupeFeu{
+    height: auto;
+    width: 200px;
+    float: right;
+}
+#Phenix {
+    height: auto;
+    width: 200px;
+    float: right;
+}
+
+#SangMele{
+    height: auto;
+    width: 200px;
+    float: right;
+}
+
+#Mort1{
+    height: auto;
+    width: 200px;
+    float: right;
+}
+
+#Mort2{
+    height: auto;
+    width: 200px;
+    float: right;
+}
+#film{
+    clear: right;
+    margin: 10px;
+    border-color: rgb(255, 255, 255);
+    border-style: ridge;
+    overflow: auto;
+}
+
+nav li{
+    display: inline-block;
+}
+
+nav ul{
+    background-color: rgb(75, 109, 124);
+    padding: 0%;
+}
+
+nav a {
+    display: block;
+    width: 196px ;
+    padding-top: 10px ;
+    padding-bottom: 10px;
+    text-decoration: none;
+    text-align: center;
+    font-size: 30px;
+    color: #e5e4e2;
+}
+
+nav a:hover{
+    background-color:rgba(189, 85, 120, 0.966);
+    color: aliceblue;
+}
+
+#TitrePerso{
+    font-family: 'Comic sans ms' ;
+    color:  gold;
+    font-size: 35px;
+}
+
+#Persoo{
+    height: auto;
+    width: 300px;
+    float: right;
+}
+
+#Construction{
+    font-family: 'Comic sans MS' ;
+    color: gold;
+    font-size: 35px;
+}
+
+#titre2{
+    color: green;
+}
+
+#TXT{
+    color: #b87333;
+}
+
+#Construc{
+    font-family: 'Comic Sans MS';
+    color: green;
+}
