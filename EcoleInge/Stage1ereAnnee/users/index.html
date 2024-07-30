@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+
+    <div class="menu">
+        <button id="users">Users</button>
+        <button id="authentification" >Authentification</button>
+        <button id="description-button">Description</button>
+        <button id="database">Rights</button>
+    </div>
+
+    <div class="language-container" id="language-container" style="display: block;">
+        <button id="english"></button>
+        <button id="french" alt ="fr"></button>
+        <button id="dutch" alt ="nl"></button>
+        <button id="spanish" alt ="es"></button>
+        <button id="german" alt ="de"></button>
+        <button id="italian" alt ="it"></button>
+    </div>
+<!--     <div class="language-sql-container" id="language-sql-container" style="display: block;">
+        <button id="mySql">MySQL</button>
+        <button id="postgreSql">PostgreSQL</button>
+    </div> -->
+    
+    <div class="users-container" id="users-container" style="display: block;">
+        <h1>Users</h1>
+        <li><button id="add-user">Add a user</button></li>
+        <li><input type="text" id="search-bar" placeholder="Search..."/></li>
+        <ol id = "users-container-ol">
+<!--             <li><button>will</button></li>
+            <li><button>Rue</button></li>
+            <li><button>Mbappe</button></li>
+            <li><button>rues</button></li> -->
+        </ol>
+    </div>
+    
+    <div class="login-container" id ="login" style="display: none;">
+        <h1>Authentification</h1>
+        <p id ="usernameSelected"></p>
+        <label for="key" id ="keyLabel">KEsasasaY</label>
+        <input type="text" id="key" placeholder="KEY" readonly>
+        <label for="username" id ="loginLabel">Logidzadazdzn</label>
+        <input type="text" id="username" placeholder="Login">
+        <label for="password" id ="passwordLabel">Passdzadzaword</label>
+        <input type="password" id="password" placeholder="Password">
+        <input type="submit" value="Continuee" id="login-btn">
+    </div>
+    <div class="login-container" id ="description" style="display: none;" >
+        <h1>Description</h1>
+        <p id ="usernameSelected"></p>
+        <label for="name" id="nameLabel">Namsasae</label>
+        <input type="text" id="name" placeholder="Nom">
+        <label for="firstname" id="firstnameLabel">Firstsas name</label>
+        <input type="text" id="firstname" placeholder="Prénom">
+        <label for="service" id ="serviceLabel">Servicsae</label>
+        <input type="text" id="service" placeholder="Service">
+        <input type="submit" value="Continue" id ="description-submit">
+    </div>
+<!--     <div class ="database-available-container" id="database-available-container" style="display: none;">
+        <h1>Current Rights</h1>
+        <ol>
+            
+        </ol>
+    </div> -->
+
+    <div class="database-available-container" id="database-available-container" style="display: none;">
+        <h1>Current Rights</h1>
+        <li><button id="add-database">Add a right on a database</button></li>
+        <div class = "table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th id = "thDatabase">DatabaseZ</th>
+                        <th id ="thRight">Right</th>
+                        <th id = "thPerimeter">Perimeter</th>
+                        <th id = "thEdit">Edit</th>
+                        <th id = "thDelete">Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="database-available-table-body">
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>    
+
+    <div class = "database-container" id="database-container" style="display: none;">
+        <h1>Database</h1>
+        <p id ="usernameSelected"></p>
+        <form action="">
+            <div class="form-group">
+                <label for="database" id ="databaseLabel">Database:</label>
+                <select id="database-select" class="form-control" name="database">
+                    <option value="blank"></option>
+<!--                     <option value="database1">Database 1</option>
+                    <option value="database2">Database 2</option>
+                    <option value="database3">Database 3</option> -->
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="user-rights" id ="rightsLabel">Rights:</label>
+                <select id="user-rights" class="form-control" name="user-rights">
+                    <option value="blank"></option>
+                    <option value="admin" id ="admin">Administrator</option>
+                    <option value="data-modification" id ="data-modification">Data Modification</option>
+                    <option value="viewer-only" id ="viewer-only">Viewer only</option>
+                </select>
+            </div>            
+            <div class="form-group">
+                <label for="user-perimeter" id ="perimeterLabel">Perimeter:</label>
+                <select class="form-control" id="user-perimeter" name="user-perimeter">
+                    <option value="blank"></option>
+                    <option value="no-change" id ="no-change">No allowed</option>
+                    <option value="study-collecte">> Study -> Collecte</option>
+                    <option value="study-collecting-itPlan">Study -> Collecting -> ItPlan</option>
+                    <option value="study-collecting-itPlan-project">Study -> Collecting -> ItPlan -> Project</option>
+                </select>
+            </div>
+            <button type="submit" id="database-submit">Ajouter cette nouvelle relation</button>
+        </form>
+    </div>
+    <script src="./languages.js"></script>
+    <script src="./menu.js"></script>
+    <script src="./databasesAvailable.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-yaml@4.0.0/dist/js-yaml.min.js"></script>
+
+</body>
+</html>

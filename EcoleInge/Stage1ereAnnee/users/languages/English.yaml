@@ -1,0 +1,60 @@
+menu:
+  users: "Users"
+  authentication: "Authentication"
+  description: "Description"
+  rights: "Rights"
+
+users:
+  title: "Users"
+  add: "Add a user"
+  search: "Search..."
+
+authentication:
+  title: "Authentication"
+  key: "KEY"
+  login: "Username"
+  password: "Password"
+
+description:
+  title: "Description"
+  name: "Name"
+  firstname: "First name"
+  service: "Service"
+  
+rights:
+  title: "Rights"
+  database: "Databases"
+  rights: "Rights"
+  perimeter: "Perimeter"
+  currentRights: "Current Rights"
+  addRight: "Add a right on a database"
+  add: "Add this right"
+  edit: "Update this right"
+  noChange: "No changes allowed"
+  viewerOnly: "Viewer only"
+  dataModification: "Data Modification"
+  admin: "Administrator"
+  editTh: "Edit"
+  deleteTh: "Delete"
+
+alert:
+  loginChanged: "Login changed"
+  loginCreated: "Login created"
+  authenticationFailed: "Authentication failed"
+  descriptionChanged: "Description changed"
+  descriptionCreated: "Description created"
+  descriptionFailed: "Description failed"
+  noUserSelected: "Please select a user"
+  emptyField: "Fields cannot be empty"
+  rightAdded: "Right added"
+  rightNotAdded: "Right not added"
+  rightDeleted: "Right deleted"
+  rightNotDeleted: "Right not deleted"
+  userNotAdded: "User not added"
+  next: "Next"
+  databaseLanguageChanged: "Database language changed"
+  databaseLanguageNotChanged: "Database language not changed"
+  userDeleted: "User deleted"
+  userNotDeleted: "User not deleted"
+  userUpdated: "User updated"
+  userNotUpdated: "User not updated"

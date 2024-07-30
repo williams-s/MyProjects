@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Questions sur Valorant</title>
+    <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+    <div id="questionContainer">
+        <div class="question-container" id="question0">
+            <p class="question">Début du quiz sur Valorant</p>
+            <div class="btn-container2">
+                <button class="btn-next" id ="nextBtn" onclick="nextQuestion('question1')">Suivant</button>
+            </div>
+        </div>
+    </div>
+    <h1>Résultats</h1>
+    <div class="btn-container">
+        <button id="btn-deleteAll">Effacer tout</button>
+        <button id="btn-showAnswers">Montrer les réponses</button>
+    </div>
+    <div class="results-players">
+        <img id="canvas-image" src="" alt="Canvas Image">
+    </div>
+    <script src="./view_results.js"></script>
+    <script src="./compteur.js"></script>
+    <script>
+        function nextQuestion(nextQuestionId) {
+            var currentQuestion = document.getElementById(nextQuestionId);
+            const results_players = document.querySelector('.results-players');
+            results_players.style.display = 'none';
+            fetch('delete.php', {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                results_players.innerHTML = '';
+                alert('Toutes les images ont été supprimées');
+            })
+            .catch(error => console.error('Error:', error));
+            if (currentQuestion) {
+                currentQuestion.style.display = 'block';
+                // Scroll to the next question
+                window.scrollTo(0, currentQuestion.offsetTop);
+
+                // Hide previous question
+                var previousQuestionId = parseInt(nextQuestionId.replace('question', ''), 10) - 1;
+                var previousQuestion = document.getElementById('question' + previousQuestionId);
+                if (previousQuestion) {
+                    previousQuestion.style.display = 'none';
+                }
+            } else {
+                console.error('Question not found:', nextQuestionId);
+            }
+        }
+    </script>
+    <script src="./getQuestions2.js"></script>
+</body>
+</html>

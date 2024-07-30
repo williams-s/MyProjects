@@ -1,0 +1,346 @@
+*{
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+    padding: 0;
+    margin: 0;
+    color: black;
+}
+
+body{
+    position: relative;
+    margin: 0;
+    color: white;
+    min-height: 100vh;    
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+    text-align: center;
+    vertical-align: middle;
+    margin: auto;
+}
+td button {
+    background-color: #f2f2f2;
+    border: none;
+    color: black;
+    padding: 5px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: auto;
+    cursor: pointer;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+.language-container {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.language-sql-container {
+    position: fixed;
+    top: 100px;
+    right: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.language-sql-container button {
+    background-repeat: no-repeat;
+    width: 100px;
+    height: 30px;
+    margin: 10px;
+}
+
+.language-container button {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 40px;
+    height: 25px;
+    margin: 10px;
+}
+
+.menu {
+    display:grid;
+    justify-content: center;
+    min-height: 10vh;
+    height: 100vh ;
+    left : 0;
+    position: fixed;
+    border: 1px solid black;
+}
+
+.menu button {
+    padding: 10px;
+    margin: 5px;
+}
+
+.menu button:hover {
+    background-color: "cyan";
+    color: black;
+}
+
+
+#users-table {
+    margin-top: 50px;
+    position: flex;
+    margin: auto;
+    width: 20%;
+}
+
+.login-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    margin : auto;
+}
+
+.login-container input[type="text"],
+.login-container input[type="password"] {
+    width: calc(100% - 20px);
+    padding: 10px;
+    margin: 8px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.login-container input[type="submit"],
+.database-container button {
+    background-color: #262926;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    margin-top: 25px;
+}
+
+.login-container h1,
+.database-container h1 {
+    margin-bottom: 20px;
+}
+
+.login-container input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+.language-container button:hover {
+    background-color: #a6c3db;
+}
+
+.users-container{
+    margin : auto;
+    max-width: 500px;
+    min-height: 100vh;
+    border: 1px solid black;
+}
+.users-container ol{
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+
+}
+.users-container ol li,
+.users-container li {
+    height: 40px;
+    border-bottom: 2px solid black;
+    cursor: pointer;
+    background-color: #f0f0f0
+}
+
+.users-container h1{
+    border: 1px solid black;
+    text-align: center;
+}
+.users-container ol li button{
+    border: none;
+    cursor: pointer;
+    width: 91%;
+    height: 100%;
+}
+
+#add-user{
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+#usernameSelected { 
+    display: none;
+}
+
+
+
+.users-container ol li button:hover,
+#add-user:hover{
+    background-color: #45a049;
+}
+
+.database-container {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 300px;
+    text-align: center;
+    margin : auto;
+}
+
+.database-available-container {
+    background-color: #fff;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate( -50%);
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border: 1px solid #000;
+    overflow: scroll;
+    height: 60vh ;
+
+}
+
+.database-available-container h1 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+#usernameSelected {
+    margin-bottom: 20px;
+}
+
+
+
+#delete-user {
+    background-color: #f0f0f0;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: rgb(10, 8, 8);
+    padding: 10px 19px ;
+    border: 1px solid #000;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    margin: auto;
+    height: 80%;
+    width: 5%;
+}
+
+#delete-user:hover {
+    background-color: #45a049;
+}
+
+
+
+#select-database-available {
+    background-color: #fbfbfb;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    color: rgb(10, 8, 8);
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+    margin: auto;
+    height: 80%;
+}
+
+#select-database-available:hover {
+    background-color: #45a049;
+}
+
+.database-available-container li {
+    margin-bottom: 10px;
+    
+}
+
+.database-available-container ol {
+    list-style: none;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+
+
+.form-group select,
+.form-group button 
+.database-available-container ol li  {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+li::marker{
+    content: none;
+}
+
+.btnAddDatabase,
+#select-database-available {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid black;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+.btnAddDatabase:hover {
+    background-color: #62d168;
+}
+
+#search-bar {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    float: right;
+    width: 100%;
+}
+
+.hidden {
+    display: none;
+}
+
+#key {
+    background: #b6b5b5;
+}
