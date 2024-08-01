@@ -6,10 +6,14 @@ const HenrikDevValorantAPI = require("unofficial-valorant-api");
 const fs = require('fs');
 const yaml = require('js-yaml');
 let configInit = null;
+let configUrl = null;
+let emojisRank = null;
 
 try {
   let config2 = yaml.load(fs.readFileSync('../config/config.yaml', 'utf8'));
   configInit = config2.keys;
+  configUrl = config2.urls;
+  emojisRank = config2.emojisRank;
 } catch (error) {
   console.error(error);
 }
@@ -17,8 +21,9 @@ try {
 const VAPI = new HenrikDevValorantAPI(
   configInit.apiKey
 );
-const url = 'http://51.20.69.207/valoTracker/package/src/getInfos.php';
-const vctLogo = 'http://51.20.69.207/valoTracker/package/images/vctlogo.png';
+const url = configUrl.api;
+const vctLogo = configUrl.vctLogo;
+
 // Configuration du bot
 const config = {
   clientId: configInit.clientId,
@@ -28,7 +33,7 @@ const config = {
 };
 
 
-const hourReset = "40 14 * * *";
+const hourReset = "0 8 * * *";
 let playersList = [];
 let guild = null;
 let channel = null; 
@@ -237,10 +242,8 @@ client.on("interactionCreate", async (interaction) => {
   }
 });
 
-
-
 async function refreshData() {
-    console.log("Refreshing data..."); 
+    //console.log("Refreshing data..."); 
     for (let i = 0; i < playersList.length; i++) {
       let player = playersList[i];
       //console.log(player.name + " " + player.tag);
@@ -284,21 +287,25 @@ async function refreshData() {
               let agentIcon = result.agentIcon;
               let kda = result.kda;
               let combatScore = result.combatScore;
+              
               //console.log("dkzodkzo " + combatScore);
               let hsRate = result.hsRate;
               let colorEmbed = result.colorEmbed;
               let card = result.card;
+              player.rr = lp;
+              player.tier = rank;
               //console.log(match.data[0].metadata.matchid + " ===== " + matchId);
               //console.log(match.data[0].metadata);
               if (match.data[0].metadata.matchid === matchId) {
-                console.log("Match found");
+                //console.log("Match found");
                 updateRank(player.name, player.tag, rank, lp);
+                let emote = matchRankWithEmote(rank);
                 const embed = new EmbedBuilder()
                 .setColor(colorEmbed)
                 .setTitle(`${resultGame}`) 
                 .setThumbnail(agentIcon)
-                .setDescription(`${player.name}#${player.tag} vient de ${verbForResult} **${lpGain}rr** ! \n Rank actuel :  **${rank}  ${lp}rr**`)
-                .setURL(`https://tracker.gg/valorant/profile/riot/${player.name}%23${player.tag}/overview`)
+                .setDescription(`${player.name}#${player.tag} vient de ${verbForResult} **${lpGain}rr** ! \n Rank actuel : ${emote}  **${rank}  ${lp}rr**`)
+                .setURL(`https://tracker.gg/valorant/match/${matchId}`)
                 .addFields(
                     { name: 'Score', value: `${score}`, inline: true },
                     { name: 'Map', value: `${map}`, inline: true },
@@ -349,7 +356,9 @@ async function getPlayers() {
             lastMatchId: user.matchId,
             tier : user.tier,
             rr : user.rr,
-            elo : user.elo
+            elo : user.elo,
+            past_rank : user.past_rank,
+	          past_rr : user.past_rr
           }
           playersList.push(playerInfo);
         });
@@ -357,6 +366,7 @@ async function getPlayers() {
       }
     )
     .catch(error => console.error(error));
+
 }
 
 async function updateMatchId(player, newMatchId) {
@@ -385,8 +395,8 @@ async function updateMatchId(player, newMatchId) {
           }
         }
       } catch (e) {
-        console.error("Erreur lors de la conversion de la réponse en JSON:", e);
-        console.log("Réponse brute:", text);
+        //console.error("Erreur lors de la conversion de la réponse en JSON:", e);
+        //console.log("Réponse brute:", text);
       }
     });
   })
@@ -421,7 +431,9 @@ async function insertPlayer(nameValue,tagValue) {
         tag: tagValue,
         tier: rank,
         rr: lp,
-        elo: elo
+        elo: elo,
+        past_rank : rank,
+        past_rr : lp
       })
     })
       .then(response => {
@@ -431,11 +443,11 @@ async function insertPlayer(nameValue,tagValue) {
           try {
             const data = JSON.parse(text);
             //console.log(data);
-            playersList.push({name: nameValue, tag: tagValue, lastMatchId: matchId, tier: rank, rr: lp, elo: elo});
+            playersList.push({name: nameValue, tag: tagValue, lastMatchId: matchId, tier: rank, rr: lp, elo: elo, past_rank: rank, past_rr: lp});
             return true;
           } catch (e) {
-            console.error("Erreur lors de la conversion de la réponse en JSON:", e);
-            console.log("Réponse brute:", text);
+            //console.error("Erreur lors de la conversion de la réponse en JSON:", e);
+            //console.log("Réponse brute:", text);
             return false;
           }
         });
@@ -521,7 +533,7 @@ async function updateRank(playerName, playerTag, newRank, newLP) {
   });
 }
 
-async function updateElo(playerName, playerTag, newElo) {
+async function updateElo(playerName, playerTag, newElo,newRank, newRr) {
   fetch(url  , {
     method: 'PUT',
     headers: {
@@ -530,7 +542,9 @@ async function updateElo(playerName, playerTag, newElo) {
     body: JSON.stringify({
       nom: playerName,
       tag: playerTag,
-      elo: newElo
+      elo: newElo,
+      past_rank: newRank,
+      past_rr: newRr
     })
   })
   .then(response => response.json())
@@ -555,6 +569,8 @@ async function rankReset(){
     elo = player.elo;
     lp = player.rr;
     rank = player.tier;
+    past_rank = player.past_rank;
+    past_rr = player.past_rr;
     if (elo == null) {
       //console.log("Elo non renseigné");
     } else {
@@ -578,8 +594,8 @@ async function rankReset(){
           sign = "-";
         }
         description += `**${capitalizeFirstLetter(player.name)}#${player.tag} : ${sign}${Math.abs(diff)}** 
-        ${rank} ${lp}rr -> ${rankNew} ${lpNew}rr \n \n`;
-        updateElo(player.name, player.tag, eloNew);
+        ${past_rank} ${past_rr}rr -> ${rankNew} ${lpNew}rr \n \n`;
+        updateElo(player.name, player.tag, eloNew,rank,lp);
       } catch (error) {
         console.error(error);
       }
@@ -610,10 +626,15 @@ function getResult(match,playerName,playerTag) {
   let combatScore = null;
   let hsRate = null;
   let card = null;
+  let scoreOfAllPlayers = [];
   //console.log(allPlayers);
   let team = null;
   for (let i = 0; i < allPlayers.length; i++) {
     let player = allPlayers[i];
+    let scorePlayer = {
+      score: player.stats.score / roundsPlayed,
+      team: player.team
+    };
     //console.log(player);
     if (player.name === playerName && player.tag === playerTag) {
       //console.log("ijfeifje " +player.team);
@@ -628,9 +649,12 @@ function getResult(match,playerName,playerTag) {
       agentIcon = assets.agent.small;
       card = assets.card.small;
       //console.log(player);
-      break;
+
+    }else{
+      scoreOfAllPlayers.push(scorePlayer);
     }
   }
+  let mvp = isMvp(scoreOfAllPlayers,combatScore,team);
   let allRounds = match.rounds;
   for (let i = 0; i < allRounds.length; i++) {
     let round = allRounds[i];
@@ -646,7 +670,7 @@ function getResult(match,playerName,playerTag) {
     agent : agent,
     agentIcon : agentIcon,
     kda : kda,
-    combatScore : combatScore.toFixed(0),
+    combatScore : combatScore.toFixed(0) +" " +mvp,
     hsRate : hsRate,
     colorEmbed : null,
     card : card,
@@ -664,6 +688,134 @@ function getResult(match,playerName,playerTag) {
   return result;
 }
 
+function isMvp(scoreOfAllPlayers,score,team){
+  let othersPlayers = 0;
+  let opponentPlayers = 0;
+  for (let i = 0; i < scoreOfAllPlayers.length; i++) {
+    let teamate = scoreOfAllPlayers[i];
+    if (teamate.team === team) {
+      if (score > teamate.score) {
+        othersPlayers++;  
+      } 
+    }
+    if (teamate.team !== team) {
+      if (score > teamate.score) {
+        opponentPlayers++;
+      } 
+    }
+  }
+  if (othersPlayers == 4) {
+    if (opponentPlayers == 5) {
+      return "⭐";
+    }
+    else {
+      return "★";
+    }
+  }
+  return "";
+}
+
+function matchRankWithEmote(rank) {
+  let emojiId = null;
+  let emojiName = null;
+  switch (rank) {
+    case "Unrated": 
+      emojiId = emojisRank.unrated.id;
+      emojiName = emojisRank.unrated.name;
+      break;
+    case "Iron 1":
+      emojiId = emojisRank.iron1.id;
+      emojiName = emojisRank.iron1.name;
+      break;
+    case "Iron 2":
+      emojiId = emojisRank.iron2.id;
+      emojiName = emojisRank.iron2.name;
+      break;
+    case "Iron 3":
+      emojiId = emojisRank.iron3.id;
+      emojiName = emojisRank.iron3.name;
+      break;
+    case "Bronze 1":
+      emojiId = emojisRank.bronze1.id;
+      emojiName = emojisRank.bronze1.name;
+      break;
+    case "Bronze 2":
+      emojiId = emojisRank.bronze2.id;
+      emojiName = emojisRank.bronze2.name;
+      break;
+    case "Bronze 3":
+      emojiId = emojisRank.bronze3.id;
+      emojiName = emojisRank.bronze3.name;
+      break;
+    case "Silver 1":
+      emojiId = emojisRank.silver1.id;
+      emojiName = emojisRank.silver1.name;
+      break;
+    case "Silver 2":
+      emojiId = emojisRank.silver2.id;
+      emojiName = emojisRank.silver2.name;
+      break;
+    case "Silver 3":
+      emojiId = emojisRank.silver3.id;
+      emojiName = emojisRank.silver3.name;
+      break;
+    case "Gold 1":
+      emojiId = emojisRank.gold1.id;
+      emojiName = emojisRank.gold1.name;
+      break;
+    case "Gold 2":
+      emojiId = emojisRank.gold2.id;
+      emojiName = emojisRank.gold2.name;
+      break;
+    case "Gold 3":
+      emojiId = emojisRank.gold3.id;
+      emojiName = emojisRank.gold3.name;
+      break;
+    case "Platinum 1":
+      emojiId = emojisRank.plat1.id;
+      emojiName = emojisRank.plat1.name;
+      break;
+    case "Platinum 2":
+      emojiId = emojisRank.plat2.id;
+      emojiName = emojisRank.plat2.name;
+      break;
+    case "Platinum 3":
+      emojiId = emojisRank.plat3.id;
+      emojiName = emojisRank.plat3.name;
+      break;
+    case "Diamond 1":
+      emojiId = emojisRank.diamond1.id;
+      emojiName = emojisRank.diamond1.name;
+      break;
+    case "Diamond 2":
+      emojiId = emojisRank.diamond2.id;
+      emojiName = emojisRank.diamond2.name;
+      break;
+    case "Diamond 3":
+      emojiId = emojisRank.diamond3.id;
+      emojiName = emojisRank.diamond3.name;
+      break;
+    case "Immortal 1":
+      emojiId = emojisRank.immortal1.id;
+      emojiName = emojisRank.immortal1.name;
+      break;
+    case "Immortal 2":
+      emojiId = emojisRank.immortal2.id;
+      emojiName = emojisRank.immortal2.name;
+      break;
+    case "Immortal 3":
+      emojiId = emojisRank.immortal3.id;
+      emojiName = emojisRank.immortal3.name;
+      break;
+    case "Radiant":
+      emojiId = emojisRank.radiant.id;  
+      emojiName = emojisRank.radiant.name;
+      break;
+    default:
+      break;
+  }
+  return `<:${emojiName}:${emojiId}>`;
+}
 
 client.login(
     config.token
