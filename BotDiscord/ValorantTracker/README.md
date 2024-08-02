@@ -1,6 +1,6 @@
 Conditions d'Utilisation du Bot Discord ValoTracker
 1. Acceptation des Conditions
-En utilisant notre bot Discord ValoTracker (ci-après "le Bot"), vous acceptez de respecter les présentes conditions d'utilisation (ci-après dénommées "Conditions"). Si vous n'acceptez pas ces Conditions, vous ne devez pas utiliser le Bot.
+En utilisant notre bot Discord ValoTracker , vous acceptez de respecter les présentes conditions d'utilisation (ci-après dénommées "Conditions"). Si vous n'acceptez pas ces Conditions, vous ne devez pas utiliser le Bot.
 
 2. Description du Service
 Le Bot est conçu pour suivre et afficher les statistiques des joueurs de Valorant. Cela inclut, sans s'y limiter, les informations sur le rang, les performances en match, et d'autres données pertinentes issues de l'API de Valorant.
