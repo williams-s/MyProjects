@@ -1,0 +1,39 @@
+Politique de Confidentialité pour le Bot valoTracker
+1. Introduction
+Bienvenue sur le bot valoTracker. Nous nous engageons à protéger votre vie privée et à veiller à ce que vos informations personnelles soient traitées de manière sécurisée et responsable. Cette Politique de Confidentialité explique comment nous collectons, utilisons et protégeons vos données lorsque vous utilisez notre bot Discord (ci-après dénommé "le Bot").
+
+2. Informations que Nous Collectons
+Nous collectons des informations pour fournir de meilleurs services à tous nos utilisateurs. Les types d'informations que nous collectons incluent :
+
+Informations Utilisateur : Nom d'utilisateur Discord, ID utilisateur, ID du serveur et toute donnée que vous fournissez explicitement au Bot.
+Données de Jeu : Statistiques des joueurs de Valorant, telles que les rangs, les performances de match et autres données liées au jeu récupérées via l'API Valorant.
+Données d'Utilisation : Informations sur la manière dont vous interagissez avec le Bot, y compris les commandes utilisées, la fréquence d'utilisation et les rapports d'erreurs.
+3. Comment Nous Utilisons Vos Informations
+Les informations que nous collectons sont utilisées pour exploiter, maintenir et vous fournir les fonctionnalités du Bot. Plus précisément, nous utilisons vos informations pour :
+
+Récupérer et afficher les statistiques des joueurs de Valorant.
+Améliorer les performances et les fonctionnalités du Bot.
+Répondre aux demandes des utilisateurs et fournir une assistance.
+Surveiller et analyser l'utilisation et les tendances pour améliorer l'expérience utilisateur.
+4. Partage et Divulgation des Données
+Nous ne partageons, ne vendons ni ne distribuons vos informations personnelles à des tiers, sauf dans les circonstances suivantes :
+
+Avec Votre Consentement : Nous partagerons vos informations avec des tiers si vous nous avez donné votre permission explicite de le faire.
+Pour des Raisons Légales : Nous pouvons divulguer vos informations si la loi nous y oblige ou en réponse à des demandes légitimes des autorités publiques (par exemple, un tribunal ou une agence gouvernementale).
+Protection et Sécurité : Nous pouvons partager des informations pour protéger les droits et la sécurité de nos utilisateurs ou d'autres personnes, ou pour faire respecter nos Conditions d'Utilisation.
+5. Sécurité des Données
+Nous mettons en œuvre des mesures techniques et organisationnelles appropriées pour protéger vos données contre tout accès, altération, divulgation ou destruction non autorisés. Cependant, veuillez noter qu'aucune mesure de sécurité n'est parfaite ou impénétrable, et nous ne pouvons garantir une sécurité absolue.
+
+6. Conservation des Données
+Nous conservons vos informations aussi longtemps que nécessaire pour vous fournir les services du Bot et pour des raisons commerciales légitimes et essentielles, telles que maintenir les performances du Bot, prendre des décisions commerciales basées sur les données concernant de nouvelles fonctionnalités et offres, respecter nos obligations légales et résoudre les litiges.
+
+7. Vos Droits sur Vos Données
+Vous avez le droit d'accéder, de corriger, de mettre à jour ou de supprimer vos informations personnelles. Si vous souhaitez exercer l'un de ces droits, veuillez nous contacter via nos canaux de support. Nous répondrons à votre demande conformément aux lois sur la protection des données applicables.
+
+8. Modifications de cette Politique de Confidentialité
+Nous pouvons mettre à jour cette Politique de Confidentialité de temps en temps pour refléter les changements dans nos pratiques ou pour d'autres raisons opérationnelles, légales ou réglementaires. Nous vous informerons de toute modification importante en publiant la nouvelle Politique de Confidentialité sur notre site Web et, le cas échéant, en vous en informant via Discord.
+
+9. Nous Contacter
+Si vous avez des questions ou des préoccupations concernant cette Politique de Confidentialité ou nos pratiques de traitement des données, veuillez nous contacter via nos canaux de support spécifiés sur notre site Web officiel ou sur notre serveur Discord de support dédié.
+
+En utilisant le bot valoTracker, vous reconnaissez avoir lu et compris cette Politique de Confidentialité. Merci de nous faire confiance avec vos informations et d'utiliser notre Bot.
