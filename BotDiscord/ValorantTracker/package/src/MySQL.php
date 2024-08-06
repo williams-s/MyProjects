@@ -84,11 +84,14 @@ class MySQL {
         }
     }
 
-    public function selectRequest($table, $columns, $conditions){
+    public function selectRequest($table, $columns, $conditions,$escapeValue){
         $columns = implode(', ', $columns);
         $conditionsTab = [];
         foreach ($conditions as $key => $value) {
-            $conditionsTab[] = "$key =" . $this->escapeValue($value);
+            if($escapeValue){
+                $value = $this->escapeValue($value);
+            }
+            $conditionsTab[] = "$key =" . $value;
         }
         $condition = implode(' AND ', $conditionsTab);
         $sql = "SELECT $columns FROM $table WHERE $condition";

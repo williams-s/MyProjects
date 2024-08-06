@@ -2,3 +2,6 @@ BotDiscord/ValorantTracker/package/config
 BotDiscord/ValorantTracker/package/README.md
 EcoleInge/Stage1ereAnnee/users/*.yaml
 EcoleInge/Stage1ereAnnee/*.yaml
+BotDiscord/ValorantTracker/package/examples
+BotDiscord/ValorantTracker/package/test
+BotDiscord/ValorantTracker/package/src/test.js
