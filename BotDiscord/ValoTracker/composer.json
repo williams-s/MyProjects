@@ -1,8 +1,0 @@
-{
-    "name": "williams/valotracker",
-    "require": {
-        "symfony/yaml": "^6.4",
-        "stichoza/google-translate-php": "^5.1",
-      "ext-curl": "*"
-    }
-}
