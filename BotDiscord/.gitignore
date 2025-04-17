@@ -1,0 +1,7 @@
+/.idea/*
+**/config/
+**/node_modules/
+**/vendor/
+**/test/
+**/sql
+**/examples
