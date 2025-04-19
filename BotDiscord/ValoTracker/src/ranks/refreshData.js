@@ -1,16 +1,16 @@
 const {updateMatchId} = require("../players/updateMatchId");
-const {updateRank} = require("./updateRanks");
 const {EmbedBuilder} = require("discord.js");
 const {matchRankWithEmote} = require("../utils/matchRankWithEmote");
 const {setLang} = require("../languages/translate");
-const {updateRecord} = require("../records/operationsOnRecords");
 const {capitalizeFirstLetter} = require("../utils/firstLetterUppercase");
+const {saveStats} = require("../stats/saveStats");
 
-async function refreshData(allDiscords, listPlayersByChannel, VAPI,myLanguageWords,client) {
+async function refreshData(allDiscords, players, VAPI,myLanguageWords,client) {
     //console.log("refreshData...");
-    for (let channel_id in listPlayersByChannel) {
-        await setLang(allDiscords[channel_id].lang,myLanguageWords);
-        let players = listPlayersByChannel[channel_id];
+    //console.log("players : " + players.length);
+    //for (let player in players) {
+        //await setLang(allDiscords[player].lang,myLanguageWords);
+        //let players = players[player];
         for (let i = 0; i < players.length; i++) {
             let player = players[i];
             //console.log(player.name + " " + player.tag);
@@ -31,23 +31,10 @@ async function refreshData(allDiscords, listPlayersByChannel, VAPI,myLanguageWor
                 const lp = lastGame.ranking_in_tier;
                 const lpGain = lastGame.mmr_change_to_last_game;
                 const map = lastGame.map.name;
+                const elo = lastGame.elo;
                 //console.log(lastGame);
-                let verbForResult = "gagner";
-                if (lpGain > 0) {
-                    verbForResult = myLanguageWords.positiveYaml;
-                }
-                else if (lpGain < 0) {
-                    verbForResult = myLanguageWords.negativeYaml;
-                }
-                else {
-                    verbForResult = myLanguageWords.neutralYaml;
-                }
                 if (player.lastMatchId !== matchId) {
                     //console.log("Last match id : " + player.lastMatchId + " - " + matchId);
-                    if (await updateMatchId(player,matchId,allDiscords)){
-                        //console.log("Match id updated");
-                        player.lastMatchId = matchId;
-                    }
                     try {
                         //const match = await VAPI.getMatches({region: "eu", name: player.name, tag: player.tag});
                         const match = await VAPI.getMatch({match_id: matchId});
@@ -59,11 +46,16 @@ async function refreshData(allDiscords, listPlayersByChannel, VAPI,myLanguageWor
                         let agentIcon = result.agentIcon;
                         let kda = result.kda;
                         let combatScore = result.combatScore;
-
+                        let kills = result.kills;
+                        let deaths = result.deaths;
+                        let assists = result.assists;
+                        let win = result.win;
+                        let lose = result.lose;
+                        let draw = result.draw;
                         //console.log("dkzodkzo " + combatScore);
                         let hsRate = result.hsRate;
                         let colorEmbed = result.colorEmbed;
-                        let card = result.card;
+                        let acs = result.acs;
                         player.rr = lp;
                         player.tier = rank;
                         //console.log(match.data[0].metadata.matchid + " ===== " + matchId);
@@ -71,43 +63,76 @@ async function refreshData(allDiscords, listPlayersByChannel, VAPI,myLanguageWor
                         //console.log(result);
                         if (match.data.metadata.matchid === matchId) {
                             //console.log("Match found");
-                            updateRank(player, rank, lp, allDiscords);
+                            if (await updateMatchId(player,matchId)){
+                                //console.log("Match id updated");
+                                player.lastMatchId = matchId;
+                                const stats = {
+                                    nom: player.name,
+                                    tag: player.tag,
+                                    matchid: matchId,
+                                    win: win,
+                                    lose: lose,
+                                    draw: draw,
+                                    kills: kills,
+                                    deaths: deaths,
+                                    assists: assists,
+                                    hs: parseFloat(hsRate.replace('%', '')),
+                                    acs: acs,
+                                    tier: rank,
+                                    rr: lp,
+                                    //past_rank: player.past_rank,
+                                    //past_rr: player.past_rr,
+                                    elo: elo
+                                }
+                                await saveStats(stats);
+                            }
+                            //updateRank(player, rank, lp, allDiscords);
                             let emote = matchRankWithEmote(rank);
-                            const embed = new EmbedBuilder()
-                                .setColor(colorEmbed)
-                                .setTitle(`${resultGame}`)
-                                .setThumbnail(agentIcon)
-                                .setDescription(`${capitalizeFirstLetter(player.name)}#${player.tag.toUpperCase()} ${verbForResult} **${lpGain}rr** ! \n ${myLanguageWords.actualRankYaml}: ${emote}  **${rank}  ${lp}rr**`)
-                                .setURL(`https://tracker.gg/valorant/match/${matchId}`)
-                                .addFields(
-                                    { name: 'Score', value: `${score}`, inline: true },
-                                    { name: 'Map', value: `${map}`, inline: true },
-                                    { name: 'Agent', value: `**${agent}**`, inline: true },
-                                    { name: myLanguageWords.combatScoreYaml, value: `${combatScore}`, inline: true },
-                                    { name: 'Headshot %', value: `${hsRate}`, inline: true },
-                                    { name: 'KDA', value: `${kda}`, inline: true },
-                                )
-                                .setTimestamp();
-
-                            let channel = client.channels.cache.get(player.channel_id);
-                            if (channel) {
-                                channel.send({ embeds: [embed] });
-                            } else {
-                                console.error('Channel not found');
+                            for (let i = 0; i < player.channel_ids.length; i++) {
+                                let channelId = player.channel_ids[i];
+                                let channel = client.channels.cache.get(channelId);
+                                await setLang(allDiscords[channelId].lang,myLanguageWords)
+                                let verbForResult = "gagner";
+                                if (lpGain > 0) {
+                                    verbForResult = myLanguageWords.positiveYaml;
+                                }
+                                else if (lpGain < 0) {
+                                    verbForResult = myLanguageWords.negativeYaml;
+                                }
+                                else {
+                                    verbForResult = myLanguageWords.neutralYaml;
+                                }
+                                const embed = new EmbedBuilder()
+                                    .setColor(colorEmbed)
+                                    .setTitle(`${resultGame}`)
+                                    .setThumbnail(agentIcon)
+                                    .setDescription(`${capitalizeFirstLetter(player.name)}#${player.tag.toUpperCase()} ${verbForResult} **${lpGain}rr** ! \n ${myLanguageWords.actualRankYaml}: ${emote}  **${rank}  ${lp}rr**`)
+                                    .setURL(`https://tracker.gg/valorant/match/${matchId}`)
+                                    .addFields(
+                                        { name: 'Score', value: `${score}`, inline: true },
+                                        { name: 'Map', value: `${map}`, inline: true },
+                                        { name: 'Agent', value: `**${agent}**`, inline: true },
+                                        { name: myLanguageWords.combatScoreYaml, value: `${combatScore}`, inline: true },
+                                        { name: 'Headshot %', value: `${hsRate}`, inline: true },
+                                        { name: 'KDA', value: `${kda}`, inline: true },
+                                    )
+                                    .setTimestamp();
+                                if (channel) {
+                                    channel.send({ embeds: [embed] });
+                                } else {
+                                    console.error('Channel not found');
+                                }
                             }
                         }
                     } catch (error) {
                         console.error(error);
                     }
-
-                    //console.log(lastGame);
-
                 }
             } catch (error) {
                 console.error(error);
             }
         }
-    }
+    //}
 }
 
 function getResult(match,myPlayer,allDiscords,myLanguageWords) {
@@ -119,6 +144,9 @@ function getResult(match,myPlayer,allDiscords,myLanguageWords) {
     let agentIcon = null;
     let agent = null;
     let kda = null;
+    let kills = null;
+    let deaths = null;
+    let assists = null;
     let combatScore = null;
     let hsRate = null;
     let card = null;
@@ -139,6 +167,9 @@ function getResult(match,myPlayer,allDiscords,myLanguageWords) {
             let stats = player.stats;
             combatScore = stats.score / roundsPlayed;
             kda = stats.kills + " / " + stats.deaths  + " / " + stats.assists ;
+            kills = stats.kills;
+            deaths = stats.deaths;
+            assists = stats.assists;
             let allshots = stats.headshots + stats.bodyshots + stats.legshots;
             hsRate = ((stats.headshots / allshots) *100).toFixed(2) + "%";
             team = player.team;
@@ -167,22 +198,32 @@ function getResult(match,myPlayer,allDiscords,myLanguageWords) {
         agent : agent,
         agentIcon : agentIcon,
         kda : kda,
+        kills : kills,
+        deaths : deaths,
+        assists : assists,
         combatScore : combatScore.toFixed(0) +" " +mvp,
+        acs : combatScore.toFixed(2),
         hsRate : hsRate,
         colorEmbed : null,
         card : card,
+        win : 0,
+        lose : 0,
+        draw : 0
     }
     if (roundsWinned > roundsLost) {
         result.resultGame = myLanguageWords.victoryYaml;
-        updateRecord(myPlayer, "win",allDiscords);
+        result.win = 1;
+        //updateRecord(myPlayer, "win",allDiscords);
         result.colorEmbed = 0x00ff00;
     } else if (roundsWinned < roundsLost) {
         result.resultGame = myLanguageWords.defeatYaml;
-        updateRecord(myPlayer, "lose",allDiscords);
+        result.lose = 1;
+        //updateRecord(myPlayer, "lose",allDiscords);
         result.colorEmbed = 0xff0000;
     } else {
         result.resultGame = myLanguageWords.drawYaml;
-        updateRecord(myPlayer, "draw",allDiscords);
+        result.draw = 1;
+        //updateRecord(myPlayer, "draw",allDiscords);
         result.colorEmbed = 0xffff00;
     }
     return result;

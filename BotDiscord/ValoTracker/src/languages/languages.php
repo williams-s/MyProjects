@@ -18,7 +18,7 @@ class Languages {
 
     public function __construct() {
         $this->translate = array();
-        $this->config = Yaml::parseFile('../config/French.yaml');
+        $this->config = Yaml::parseFile('../dictionnary/French.yaml');
     }
 
     public static function getInstance() {

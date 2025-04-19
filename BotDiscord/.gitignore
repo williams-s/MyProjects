@@ -1,5 +1,6 @@
 /.idea/*
 **/config/
+**/dictionnary/
 **/node_modules/
 **/vendor/
 **/test/

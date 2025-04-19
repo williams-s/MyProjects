@@ -1,89 +1,98 @@
 const {setLang} = require("../languages/translate");
 const {sortList} = require("../utils/sortList");
-const {updateElo} = require("./updateRanks");
-const {resetRecord} = require("../records/operationsOnRecords");
 const {EmbedBuilder} = require("discord.js");
 const {capitalizeFirstLetter} = require("../utils/firstLetterUppercase");
+const {GET_SUMMARY} = require("../../sql/sqlQueries");
+const {set} = require("express/lib/application");
 
-async function rankReset(allDiscords,listPlayersByChannel,VAPI,myLanguageWords,client,vctLogo){
+async function rankReset(allDiscords,VAPI,myLanguageWords,client,vctLogo,period,periodSummaryTitle="Daily Summary") {
     //console.log("rankReset");
     let description = "";
-    let elo = null;
-    let lp = null;
-    let rank = null;
-    let past_rr;
-    let past_rank;
+    let subTitle;
+    const data = await GET_SUMMARY(period);
+    const playersSummary = data.rows;
+    //console.log(playersSummary);
+    let listPlayersByChannel = {};
+    for (let i = 0; i < playersSummary.length; i++) {
+        let player = playersSummary[i];
+        let channel_ids = player.channel_ids;
+        for (let i = 0; i < channel_ids.length; i++) {
+            let channel_id = channel_ids[i];
+            //console.log(channel_id);
+            if (!listPlayersByChannel[channel_id]) {
+                listPlayersByChannel[channel_id] = [];
+            }
+            listPlayersByChannel[channel_id].push(player);
+        }
+    }
+    //console.log(listPlayersByChannel);
     for (let channel_id in listPlayersByChannel) {
         description = "";
         await setLang(allDiscords[channel_id].lang, myLanguageWords);
+        if (periodSummaryTitle === "Daily Summary") {
+            subTitle = myLanguageWords.dailySummarySubtitleYaml;
+        }
+        if (periodSummaryTitle === "Weekly Summary") {
+            subTitle = myLanguageWords.weeklySummarySubtitleYaml;
+        }
+        if (periodSummaryTitle === "Monthly Summary") {
+            subTitle = myLanguageWords.monthlySummarySubtitleYaml;
+        }
         let players = listPlayersByChannel[channel_id];
         if (players) {
             await sortList(players);
             for (let i = 0; i < players.length; i++) {
                 let player = players[i];
-                const win = Number(player.win);
-                const lose = Number(player.lose);
-                const draw = Number(player.draw);
-                if (lose === 0 && win === 0 && draw === 0) {
-
-                } else {
-                    elo = player.elo;
-                    lp = player.rr;
-                    rank = player.tier;
-                    past_rank = player.past_rank;
-                    past_rr = player.past_rr;
-                    if (elo == null) {
-                        //console.log("Elo non renseigné");
-                    } else {
-                        try {
-                            const mmr_data = await VAPI.getMMRHistory({
-                                region: "eu",
-                                name: player.name,
-                                tag: player.tag,
-                            });
-                            if (mmr_data.error) {
-                                console.error(mmr_data.error);
-                            }
-                            const dataString = JSON.parse(JSON.stringify(mmr_data.data));
-                            const lastGame = dataString[0];
-                            const rankNew = lastGame.currenttierpatched;
-                            const lpNew = lastGame.ranking_in_tier;
-                            const eloNew = lastGame.elo;
-                            const diff = eloNew - elo;
-
-                            let record = "";
-                            if (win !== 0) {
-                                record += `${win} win(s) `;
-                            }
-                            if (lose !== 0) {
-                                record += `${lose} loss(es) `;
-                            }
-                            if (draw !== 0) {
-                                record += `${draw} draw(s)`;
-                            }
-                            const allgames = win + lose + draw;
-                            const winrate = (win / allgames) * 100;
-                            let sign = "+";
-                            if (diff < 0) {
-                                sign = "-";
-                            }
-                            description += `**${capitalizeFirstLetter(player.name)}#${player.tag.toUpperCase()} : ${sign}${Math.abs(diff)}** 
-              ${capitalizeFirstLetter(past_rank)} ${past_rr}rr -> ${capitalizeFirstLetter(rankNew)} ${lpNew}rr 
-              (${allgames} game(s) : ${record} | ${winrate.toFixed(2)}% winrate) \n \n`;
-                            updateElo(player, eloNew, rank, lp, allDiscords);
-                        } catch (error) {
-                            console.error(error);
-                        }
-                    }
+                const wins = Number(player.wins);
+                const loses = Number(player.loses);
+                const draws = Number(player.draws);
+                let record = "";
+                if (wins !== 0) {
+                    record += `${wins} win(s) `;
                 }
-                resetRecord(player, allDiscords);
+                if (loses !== 0) {
+                    record += `${loses} loss(es) `;
+                }
+                if (draws !== 0) {
+                    record += `${draws} draw(s)`;
+                }
+                const allgames = wins + loses + draws;
+                const hsRate = Number(player.hs).toFixed(2) + "%";
+                const acs = Number(player.acs).toFixed(2);
+                const kills = player.kills;
+                const deaths = player.deaths;
+                const assists = player.assists;
+                const kda = kills + " / " + deaths + " / " + assists;
+                const avgKills = Number(player.avg_kills).toFixed(2);
+                const avgDeaths = Number(player.avg_deaths).toFixed(2);
+                const avgAssists = Number(player.avg_assists).toFixed(2);
+                const avgKda = avgKills + " / " + avgDeaths + " / " + avgAssists;
+                const current_tier = player.current_tier;
+                const current_rr = player.current_rr;
+                const current_elo = player.current_elo;
+                const previous_tier = player.previous_tier;
+                const previous_rr = player.previous_rr;
+                const previous_elo = player.previous_elo;
+
+                const diff = Number(current_elo) - Number(previous_elo);
+
+                const winrate = (wins / allgames) * 100;
+                let sign = "+";
+                if (diff < 0) {
+                    sign = "-";
+                }
+                description += `**${capitalizeFirstLetter(player.nom)}#${player.tag.toUpperCase()} : ${sign}${Math.abs(diff)}**\n`;
+                description += `**${capitalizeFirstLetter(previous_tier)} ${previous_rr}rr -> ${capitalizeFirstLetter(current_tier)} ${current_rr}rr**\n`;
+                description += `Avg Headshot % : ${hsRate} | Avg ACS : ${acs}\n`;
+                description += `KDA : ${kda} | Avg KDA : ${avgKda}\n`;
+                description += `${allgames} game(s) : ${record} | ${winrate.toFixed(2)}% winrate\n\n`;
             }
             let channel = client.channels.cache.get(channel_id);
             const embed = new EmbedBuilder()
                 .setColor(0xA020F0)
                 .setThumbnail('attachment://vctLogo.png')
-                .setTitle('Daily Summary')
-                .setDescription(`${myLanguageWords.dailySummarySubtitleYaml} : \n\n ${description}`)
+                .setTitle(periodSummaryTitle)
+                .setDescription(`${subTitle} : \n\n ${description}`)
                 .setTimestamp();
             //console.log(description);
             if (description !== "") {

@@ -8,7 +8,7 @@ let unbindTitle, unbindDescription, unbindError;
 let victoryYaml, drawYaml, defeatYaml;
 let positiveYaml, negativeYaml, neutralYaml;
 let combatScoreYaml, actualRankYaml;
-let dailySummarySubtitleYaml;
+let dailySummarySubtitleYaml,weeklySummarySubtitleYaml,monthlySummarySubtitleYaml;
 let lastGame;
 let errorTitle,wrongChannel,goodChannel;
 let nameAndTag;
@@ -71,6 +71,9 @@ const translate = (lang = null) => {
                 actualRankYaml = resultText.actualRank;
 
                 dailySummarySubtitleYaml = data.dailySummary.subTitle;
+                weeklySummarySubtitleYaml = data.weeklySummary.subTitle;
+                monthlySummarySubtitleYaml = data.monthlySummary.subTitle;
+
                 lastGame = data.lastGame.title;
                 let errorData = data.error;
                 errorTitle = errorData.title;
@@ -119,7 +122,7 @@ async function initialize(lang) {
             victoryYaml, drawYaml, defeatYaml,
             positiveYaml, negativeYaml, neutralYaml,
             combatScoreYaml, actualRankYaml,
-            dailySummarySubtitleYaml,
+            dailySummarySubtitleYaml,weeklySummarySubtitleYaml,monthlySummarySubtitleYaml,
             lastGame,
             errorTitle, wrongChannel, goodChannel,
             helpTitle, helpInit, helpAddPlayer, helpRemovePlayer, helpLeaderboard, helpProfile, helpFr, helpEn, helpEs, helpDe, helpAllcommands, helpAllcommandsInChannel, helpDescription,

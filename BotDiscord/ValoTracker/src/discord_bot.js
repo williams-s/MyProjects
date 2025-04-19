@@ -33,18 +33,22 @@ const config = {
 };
 
 
-const hourReset = "0 8 * * *";
-const getPlayersReset = "10 7 * * *";
+const dailySummary = "0 6 * * *";
+const weeklySummary = "0 7 * * 1";
+const monthlySummary = "0 8 1 * *";
+
+//const getPlayersReset = "10 7 * * *";
 let playersList = [];
 let guild = null;
 let channel = null; 
-getPlayers(playersList, listPlayersByChannel);
+getPlayers(playersList, listPlayersByChannel)
 getDiscordId(allDiscords,allGuilds);
 
 
 
 setLang(null,myLanguageWords);
 
+// Enregistrer les commandes globales
 const rest = new REST({ version: "10" }).setToken(config.token);
 
 (async () => {
@@ -59,6 +63,7 @@ const rest = new REST({ version: "10" }).setToken(config.token);
   }
 })();
 
+// Initialiser le bot
 const client = new Client({
   intents: [
     GatewayIntentBits.Guilds,
@@ -81,16 +86,24 @@ client.once("ready", () => {
 
 initCommands(client,myLanguageWords,allGuilds,allDiscords,listPlayersByChannel,VAPI,playersList);
 
-schedule.scheduleJob(hourReset, () => {
-  rankReset(allDiscords, listPlayersByChannel, VAPI, myLanguageWords, client, vctLogo);
+schedule.scheduleJob(dailySummary, () => {
+  rankReset(allDiscords, VAPI, myLanguageWords, client, vctLogo,"24 hours","Daily Summary");
 });
 
-schedule.scheduleJob(getPlayersReset, () => {
-  getPlayers(playersList, listPlayersByChannel);
+schedule.scheduleJob(weeklySummary, () => {
+  rankReset(allDiscords, VAPI, myLanguageWords, client, vctLogo,"7 days","Weekly Summary");
 });
+
+schedule.scheduleJob(monthlySummary, () => {
+  rankReset(allDiscords, VAPI, myLanguageWords, client, vctLogo,"1 month","Monthly Summary");
+});
+
+/*schedule.scheduleJob(getPlayersReset, () => {
+  getPlayers(playersList, listPlayersByChannel);
+});*/
 
 setInterval(() => {
-  refreshData(allDiscords, listPlayersByChannel, VAPI, myLanguageWords,client);
+  refreshData(allDiscords, playersList, VAPI, myLanguageWords,client);
 }, 120000);
 
 
